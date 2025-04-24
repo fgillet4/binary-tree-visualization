@@ -18,21 +18,18 @@ const TreeNode = ({ node, animationInProgress, onClick }) => {
     return node.highlightState === 'normal' ? COLORS.BORDER_NORMAL : COLORS.BORDER_HIGHLIGHT;
   };
   
-  // Animation classes
-  const animationClass = animationInProgress ? 'animating' : '';
-  
   // Handle node click
-  const handleClick = () => {
+  const handleClick = (e) => {
     if (onClick) {
-      onClick(node);
+      onClick(node, e);
     }
   };
   
   return (
     <g 
-      className={`tree-node ${animationClass} ${node.highlightState}`}
+      className={`tree-node ${node.highlightState}`}
       onClick={handleClick}
-      style={{ cursor: onClick ? 'pointer' : 'default' }}
+      style={{ cursor: 'pointer' }}
       data-value={node.value}
     >
       {/* Node circle */}
@@ -56,6 +53,7 @@ const TreeNode = ({ node, animationInProgress, onClick }) => {
         fontWeight="bold"
         fill={COLORS.TEXT_NORMAL}
         className="node-text"
+        pointerEvents="none" // This ensures clicks pass through to the circle
       >
         {node.value}
       </text>

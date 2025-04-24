@@ -1,11 +1,12 @@
 /**
- * App.js - Simplified version focusing on reliable insertion
+ * App.js - Updated with node details panel and support for panning
  */
 
 import React, { useState, useEffect } from 'react';
 import TreeVisualization from './TreeVisualization';
 import TreeControls from './TreeControls';
 import InfoPanel from './InfoPanel';
+import NodeDetailsPanel from './NodeDetailsPanel';
 
 // Tree Node Class
 class TreeNode {
@@ -150,6 +151,41 @@ class SimpleTree {
     
     position(this.root);
   }
+  
+  // Get tree height (maximum depth)
+  getHeight() {
+    const calculateHeight = (node) => {
+      if (!node) return 0;
+      return 1 + Math.max(calculateHeight(node.left), calculateHeight(node.right));
+    };
+    
+    return calculateHeight(this.root) - 1; // Height is 0-based
+  }
+  
+  // Check if tree is balanced
+  isBalanced() {
+    const checkBalance = (node) => {
+      if (!node) return { balanced: true, height: 0 };
+      
+      const left = checkBalance(node.left);
+      const right = checkBalance(node.right);
+      
+      if (!left.balanced || !right.balanced) {
+        return { balanced: false, height: 0 };
+      }
+      
+      if (Math.abs(left.height - right.height) > 1) {
+        return { balanced: false, height: 0 };
+      }
+      
+      return { 
+        balanced: true, 
+        height: 1 + Math.max(left.height, right.height) 
+      };
+    };
+    
+    return checkBalance(this.root).balanced;
+  }
 }
 
 // Main App Component
@@ -157,6 +193,8 @@ const App = () => {
   const [tree, setTree] = useState(new SimpleTree());
   const [message, setMessage] = useState('Welcome! Add values to build a tree.');
   const [treeVersion, setTreeVersion] = useState(0);
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [nodeRelationships, setNodeRelationships] = useState(null);
   
   // Calculate positions whenever the tree changes
   useEffect(() => {
@@ -187,9 +225,57 @@ const App = () => {
       
       // Force a re-render
       setTreeVersion(v => v + 1);
+      
+      // Clear selected node if any
+      setSelectedNode(null);
+      setNodeRelationships(null);
     } catch (error) {
       console.error("Error inserting value:", error);
       setMessage(`Error inserting value: ${error.message}`);
+    }
+  };
+  
+  // Handle batch insertion
+  const handleBatchInsert = (values) => {
+    if (!values.trim()) {
+      setMessage(`Please enter comma-separated values.`);
+      return;
+    }
+    
+    try {
+      // Parse the values
+      const valueArray = values.split(',').map(v => v.trim());
+      let insertedCount = 0;
+      
+      // Insert each value
+      for (const val of valueArray) {
+        const numValue = parseInt(val);
+        
+        if (isNaN(numValue)) {
+          continue; // Skip invalid values
+        }
+        
+        // Skip duplicates
+        if (tree.search(numValue).found) {
+          continue;
+        }
+        
+        // Insert the value
+        tree.insert(numValue);
+        insertedCount++;
+      }
+      
+      setMessage(`Inserted ${insertedCount} values into the tree.`);
+      
+      // Force a re-render
+      setTreeVersion(v => v + 1);
+      
+      // Clear selected node if any
+      setSelectedNode(null);
+      setNodeRelationships(null);
+    } catch (error) {
+      console.error("Error batch inserting values:", error);
+      setMessage(`Error batch inserting values: ${error.message}`);
     }
   };
   
@@ -206,6 +292,13 @@ const App = () => {
       
       if (result.found) {
         setMessage(`Found ${numValue} in the tree!`);
+        
+        // Set as selected node
+        setSelectedNode(result.node);
+        
+        // Calculate relationships
+        const relationships = calculateNodeRelationships(tree, result.node);
+        setNodeRelationships(relationships);
         
         // Highlight the found node
         const highlightNode = (node, target) => {
@@ -225,6 +318,9 @@ const App = () => {
         setTreeVersion(v => v + 1);
       } else {
         setMessage(`Value ${numValue} not found in the tree.`);
+        // Clear selected node
+        setSelectedNode(null);
+        setNodeRelationships(null);
       }
     } catch (error) {
       console.error("Error searching for value:", error);
@@ -248,6 +344,12 @@ const App = () => {
         return;
       }
       
+      // If deleting the selected node, clear selection
+      if (selectedNode && selectedNode.value === numValue) {
+        setSelectedNode(null);
+        setNodeRelationships(null);
+      }
+      
       // Delete the value
       tree.delete(numValue);
       setMessage(`Deleted ${numValue} from the tree.`);
@@ -264,6 +366,9 @@ const App = () => {
   const handleReset = () => {
     setTree(new SimpleTree());
     setMessage('Tree has been reset.');
+    setSelectedNode(null);
+    setNodeRelationships(null);
+    setTreeVersion(v => v + 1);
   };
   
   // Generate a random tree
@@ -285,10 +390,135 @@ const App = () => {
       
       setTree(newTree);
       setMessage('Generated a random tree.');
+      setSelectedNode(null);
+      setNodeRelationships(null);
+      setTreeVersion(v => v + 1);
     } catch (error) {
       console.error("Error generating random tree:", error);
       setMessage(`Error generating random tree: ${error.message}`);
     }
+  };
+  
+  // Handle node click
+  const handleNodeClick = (node, relationships) => {
+    setSelectedNode(node);
+    setNodeRelationships(relationships);
+    setMessage(`Selected node: ${node.value}`);
+    
+    // Highlight the selected node
+    const highlightNode = (treeNode, target) => {
+      if (!treeNode) return;
+      
+      if (treeNode.value === target.value) {
+        treeNode.highlightState = 'found';
+      } else {
+        treeNode.highlightState = 'normal';
+      }
+      
+      highlightNode(treeNode.left, target);
+      highlightNode(treeNode.right, target);
+    };
+    
+    highlightNode(tree.root, node);
+    setTreeVersion(v => v + 1);
+  };
+  
+  // Close node details panel
+  const handleCloseNodeDetails = () => {
+    setSelectedNode(null);
+    setNodeRelationships(null);
+    
+    // Reset all highlights
+    const resetHighlights = (node) => {
+      if (!node) return;
+      node.highlightState = 'normal';
+      resetHighlights(node.left);
+      resetHighlights(node.right);
+    };
+    
+    resetHighlights(tree.root);
+    setTreeVersion(v => v + 1);
+  };
+  
+  // Calculate node relationships
+  const calculateNodeRelationships = (tree, node) => {
+    if (!tree || !tree.root || !node) return null;
+    
+    // Find parent and path to node
+    const findPath = (root, target, path = [], parent = null) => {
+      if (!root) return null;
+      
+      // Add current node to the path
+      path.push(root);
+      
+      // Found the target node
+      if (root.value === target.value) {
+        return { path, parent };
+      }
+      
+      // Search in left subtree
+      if (target.value < root.value) {
+        return findPath(root.left, target, [...path], root);
+      }
+      
+      // Search in right subtree
+      return findPath(root.right, target, [...path], root);
+    };
+    
+    const pathResult = findPath(tree.root, node);
+    
+    if (!pathResult) return null;
+    
+    const { path, parent } = pathResult;
+    
+    // Find siblings
+    let siblings = [];
+    if (parent) {
+      if (parent.left && parent.left.value !== node.value) {
+        siblings.push(parent.left);
+      }
+      if (parent.right && parent.right.value !== node.value) {
+        siblings.push(parent.right);
+      }
+    }
+    
+    // Calculate node height (max depth of subtree)
+    const getHeight = (node) => {
+      if (!node) return 0;
+      return Math.max(getHeight(node.left), getHeight(node.right)) + 1;
+    };
+    
+    const height = getHeight(node) - 1; // Convert to 0-based height
+    
+    // Calculate node depth (distance from root)
+    const depth = path.length - 1;
+    
+    // Determine if node is a leaf
+    const isLeaf = !node.left && !node.right;
+    
+    // Count children
+    const childCount = (node.left ? 1 : 0) + (node.right ? 1 : 0);
+    
+    // Return all relationships
+    return {
+      parent,
+      siblings,
+      ancestors: path.slice(0, -1), // All nodes in the path except the target node
+      path,
+      height,
+      depth,
+      isLeaf,
+      childCount
+    };
+  };
+  
+  // Generate tree statistics
+  const getTreeStats = () => {
+    return {
+      nodeCount: tree.nodeCount,
+      height: tree.getHeight(),
+      isBalanced: tree.isBalanced()
+    };
   };
   
   return (
@@ -310,6 +540,7 @@ const App = () => {
               onDelete={handleDelete}
               onReset={handleReset}
               onRandomTree={handleRandomTree}
+              onBatchInsert={handleBatchInsert}
               onTraversal={() => {}}
               animationInProgress={false}
             />
@@ -326,7 +557,17 @@ const App = () => {
               <h3>Tree Statistics</h3>
               <ul>
                 <li><strong>Nodes:</strong> {tree.nodeCount}</li>
-                <li><strong>Height:</strong> {tree.root ? Math.log2(tree.nodeCount + 1) | 0 : 0}</li>
+                <li><strong>Height:</strong> {tree.getHeight()}</li>
+                <li><strong>Balanced:</strong> {tree.isBalanced() ? 'Yes' : 'No'}</li>
+              </ul>
+            </div>
+            
+            <div className="info-tips">
+              <h3>Interaction Tips</h3>
+              <ul>
+                <li>Click on any node to view detailed information</li>
+                <li>Hold Ctrl and drag to pan the visualization</li>
+                <li>Use Ctrl + mouse wheel to zoom in/out</li>
               </ul>
             </div>
           </div>
@@ -337,9 +578,17 @@ const App = () => {
             <TreeVisualization
               tree={tree}
               animationInProgress={false}
-              onNodeClick={(node) => setMessage(`Selected node with value: ${node.value}`)}
+              onNodeClick={handleNodeClick}
               key={treeVersion}
             />
+            
+            {selectedNode && nodeRelationships && (
+              <NodeDetailsPanel
+                node={selectedNode}
+                relationships={nodeRelationships}
+                onClose={handleCloseNodeDetails}
+              />
+            )}
           </div>
         </div>
       </div>
