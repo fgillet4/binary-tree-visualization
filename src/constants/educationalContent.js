@@ -1,9 +1,11 @@
 /**
  * educationalContent.js
- * Educational text content about binary search trees
+ * Educational text content about binary search trees and binary heaps
  */
 
 export const EDUCATIONAL_CONTENT = {
+  // Binary Search Tree content
+  bst: {
     // Introduction to binary search trees
     introduction: {
       title: "Binary Search Trees",
@@ -140,4 +142,160 @@ export const EDUCATIONAL_CONTENT = {
         Hash Table     | O(1)      | O(1)      | O(1)      | O(n)     | No
       `
     }
-  };
+  },
+  
+  // Binary Heap content
+  heap: {
+    // Introduction to binary heaps
+    introduction: {
+      title: "Binary Heaps",
+      content: `
+        A Binary Heap is a complete binary tree that satisfies the heap property. In a complete 
+        binary tree, all levels are fully filled except possibly the last level, which is filled 
+        from left to right.
+        
+        There are two types of binary heaps:
+        - Min Heap: The value of each node is greater than or equal to its parent (min at root)
+        - Max Heap: The value of each node is less than or equal to its parent (max at root)
+        
+        Binary heaps are commonly implemented using arrays, where for a node at index i:
+        - Parent is at index (i-1)/2
+        - Left child is at index 2i+1
+        - Right child is at index 2i+2
+      `
+    },
+    
+    // Operation details
+    operations: {
+      insert: {
+        title: "Insertion in Heap",
+        content: `
+          To insert a value into a binary heap:
+          
+          1. Add the new element at the end of the heap (last level, leftmost available position)
+          2. Compare it with its parent:
+             - For Min Heap: If smaller than parent, swap
+             - For Max Heap: If larger than parent, swap
+          3. Continue comparing and swapping up the tree (heapify-up) until the heap property is restored
+          
+          Time Complexity: O(log n) in worst case
+        `
+      },
+      extractRoot: {
+        title: "Extract Root from Heap",
+        content: `
+          Extracting the root (min value in Min Heap, max value in Max Heap):
+          
+          1. Store the root value to return it
+          2. Replace the root with the last element in the heap
+          3. Remove the last element
+          4. Compare the new root with its children:
+             - For Min Heap: Swap with the smaller child if it's smaller than the current node
+             - For Max Heap: Swap with the larger child if it's larger than the current node
+          5. Continue comparing and swapping down the tree (heapify-down) until the heap property is restored
+          
+          Time Complexity: O(log n) in worst case
+        `
+      },
+      heapify: {
+        title: "Building a Heap (Heapify)",
+        content: `
+          To build a heap from an unsorted array:
+          
+          1. Start with the raw array
+          2. Find the last non-leaf node (index (n/2)-1, where n is size of the array)
+          3. Perform heapify-down operation on each node from the last non-leaf node down to the root
+          
+          This bottom-up approach builds a valid heap in O(n) time, which is more efficient than 
+          inserting elements one-by-one.
+          
+          Time Complexity: O(n) surprisingly (not O(n log n) as might be expected)
+        `
+      }
+    },
+    
+    // Time complexity information
+    timeComplexity: {
+      title: "Time Complexity of Heap Operations",
+      content: `
+        Binary heaps provide efficient operations with the following time complexities:
+        
+        Operation       | Time Complexity
+        --------------- | --------------
+        Find Min/Max    | O(1)
+        Insert          | O(log n)
+        Extract Min/Max | O(log n)
+        Heapify (build) | O(n)
+        Delete          | O(log n)
+        
+        Unlike binary search trees, heaps are always complete binary trees, so they never degenerate 
+        into O(n) performance like an unbalanced BST can.
+      `
+    },
+    
+    // Tips for understanding
+    tips: [
+      "The heap is always a complete binary tree, meaning it's filled at all levels except possibly the last, which is filled from left to right.",
+      "Heaps are not designed for searching for arbitrary elements (would require O(n) time).",
+      "A binary heap can be efficiently represented as an array without pointers.",
+      "Heaps are the underlying data structure for heap sort and priority queues.",
+      "In a min heap, the minimum element is always at the root, making it O(1) to find.",
+      "The array representation makes binary heaps very memory-efficient compared to node-pointer-based trees."
+    ],
+    
+    // Practical applications
+    applications: {
+      title: "Applications of Binary Heaps",
+      content: `
+        Binary heaps are used in various applications:
+        
+        - Priority Queues: Efficiently maintain a collection with quick access to highest/lowest priority element
+        - Heap Sort: An efficient comparison-based sorting algorithm
+        - Graph Algorithms: Dijkstra's shortest path and Prim's minimum spanning tree
+        - Operating Systems: Process scheduling
+        - Event-driven simulation
+        - Media streaming
+      `
+    },
+    
+    // Comparison with other priority queue implementations
+    comparison: {
+      title: "Heap vs Other Priority Queue Implementations",
+      content: `
+        Data Structure      | Extract Min/Max | Insert    | Build      | Space
+        ------------------- | --------------- | --------- | ---------- | --------
+        Unsorted Array      | O(n)            | O(1)      | O(n)       | O(n)
+        Sorted Array        | O(1)            | O(n)      | O(n log n) | O(n)
+        Binary Heap         | O(log n)        | O(log n)  | O(n)       | O(n)
+        Binomial Heap       | O(log n)        | O(1)*     | O(n)       | O(n)
+        Fibonacci Heap      | O(log n)        | O(1)*     | O(n)       | O(n)
+        
+        * Amortized time complexity
+        
+        Binary heaps offer a good balance of simplicity and performance for most applications.
+      `
+    },
+    
+    // Heap vs BST
+    vsBST: {
+      title: "Binary Heap vs Binary Search Tree",
+      content: `
+        Binary Heap:
+        - Always complete binary tree (predictable shape)
+        - Faster insertion/deletion in worst case (O(log n) guaranteed)
+        - O(1) access to min/max element
+        - Cannot efficiently search for arbitrary elements (O(n))
+        - More memory-efficient (array-based implementation)
+        - Simpler implementation
+        
+        Binary Search Tree:
+        - May become unbalanced (unless using self-balancing variants)
+        - O(log n) for all operations only if balanced
+        - Efficient searching for any element (O(log n) if balanced)
+        - In-order traversal gives sorted order
+        - Supports operations like predecessor, successor, range queries
+        - More complex implementation (especially for balanced variants)
+      `
+    }
+  }
+};

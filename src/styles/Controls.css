@@ -5,202 +5,334 @@
 
 /* Common control styles */
 .controls-panel {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .controls-panel h2 {
-    margin-bottom: 1rem;
-    color: #2c3e50;
-    font-size: 1.3rem;
-  }
-  
-  /* Form controls */
-  .operation-form,
-  .batch-form {
-    margin-bottom: 1.5rem;
-  }
-  
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.controls-panel h2 {
+  margin-bottom: 1rem;
+  color: #2c3e50;
+  font-size: 1.3rem;
+}
+
+/* Form controls */
+.operation-form,
+.batch-form {
+  margin-bottom: 1.5rem;
+}
+
+.control-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+@media (min-width: 576px) {
   .control-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.8rem;
+    flex-wrap: nowrap;
   }
-  
-  @media (min-width: 576px) {
-    .control-group {
-      flex-wrap: nowrap;
-    }
-  }
-  
-  /* Select controls */
-  .operation-select,
-  .traversal-select {
-    min-width: 120px;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: #fff;
-    flex: 1;
-  }
-  
-  /* Input fields */
-  .value-input,
-  .batch-input {
-    flex: 2;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
-  
-  .value-input:focus,
-  .batch-input:focus,
-  .operation-select:focus,
-  .traversal-select:focus {
-    outline: none;
-    border-color: #4d94ff;
-    box-shadow: 0 0 0 2px rgba(77, 148, 255, 0.2);
-  }
-  
-  /* Button styles */
-  .operation-button,
-  .batch-button,
-  .animation-toggle-button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #4d94ff;
-    color: white;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    white-space: nowrap;
-  }
-  
-  .operation-button:hover,
-  .batch-button:hover,
-  .animation-toggle-button:hover {
-    background-color: #3a7bd5;
-  }
-  
-  .operation-button:disabled,
-  .batch-button:disabled,
-  .animation-toggle-button:disabled {
-    background-color: #b3cce6;
-    cursor: not-allowed;
-  }
-  
-  /* Error message */
-  .error-message {
-    color: #dc3545;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    padding: 0.3rem 0;
-  }
-  
-  /* Traversal controls */
-  .traversal-controls {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .traversal-controls label {
-    font-weight: 500;
-    margin-right: 0.5rem;
-  }
-  
-  /* Animation controls */
-  .animation-controls {
-    padding-top: 1rem;
+}
+
+/* Select controls */
+.operation-select,
+.traversal-select,
+.heap-type-select {
+  min-width: 120px;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: #fff;
+  flex: 1;
+}
+
+/* Input fields */
+.value-input,
+.batch-input {
+  flex: 2;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.value-input:focus,
+.batch-input:focus,
+.operation-select:focus,
+.traversal-select:focus,
+.heap-type-select:focus {
+  outline: none;
+  border-color: #4d94ff;
+  box-shadow: 0 0 0 2px rgba(77, 148, 255, 0.2);
+}
+
+/* Button styles */
+.operation-button,
+.batch-button,
+.animation-toggle-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #4d94ff;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.operation-button:hover,
+.batch-button:hover,
+.animation-toggle-button:hover {
+  background-color: #3a7bd5;
+}
+
+.operation-button:disabled,
+.batch-button:disabled,
+.animation-toggle-button:disabled {
+  background-color: #b3cce6;
+  cursor: not-allowed;
+}
+
+/* Error message */
+.error-message {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0;
+}
+
+/* Traversal controls */
+.traversal-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.traversal-controls label {
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+/* Animation controls */
+.animation-controls {
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  margin-top: 1rem;
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.speed-control label {
+  font-weight: 500;
+  margin-right: 0.5rem;
+  min-width: 110px;
+}
+
+.speed-slider {
+  flex: 1;
+  min-width: 150px;
+  height: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #ddd;
+  outline: none;
+  border-radius: 4px;
+}
+
+.speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4d94ff;
+  cursor: pointer;
+}
+
+.speed-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4d94ff;
+  cursor: pointer;
+  border: none;
+}
+
+.speed-slider:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.speed-slider:disabled::-webkit-slider-thumb {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.speed-slider:disabled::-moz-range-thumb {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.speed-label {
+  min-width: 90px;
+  text-align: center;
+  padding: 0.3rem 0.6rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+/* Speed preset buttons */
+.speed-presets {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.speed-preset-button {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.speed-preset-button:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.speed-preset-button:disabled {
+  background-color: #f5f5f5;
+  color: #aaa;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Button variants */
+.animation-toggle-button {
+  width: 100%;
+  margin-top: 0.5rem;
+  background-color: #4f5bd5;
+}
+
+.animation-toggle-button:hover {
+  background-color: #3d49c0;
+}
+
+/* Animation arrows */
+.animation-arrow {
+  transition: opacity 0.3s;
+}
+
+.animation-arrow path, 
+.animation-arrow polygon,
+.animation-arrow text {
+  transition: all 0.3s;
+}
+
+/* Step navigation controls */
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.step-nav-button {
+  padding: 0.5rem 1rem;
+  background-color: #4d94ff;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.step-nav-button:hover:not(:disabled) {
+  background-color: #3a7bd5;
+}
+
+.step-nav-button:disabled {
+  background-color: #b3cce6;
+  cursor: not-allowed;
+}
+
+.step-counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+  padding: 0.3rem 0.6rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+/* Heap type controls */
+.heap-type-selector {
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.heap-type-selector label {
+  font-weight: 500;
+  white-space: nowrap;
+  color: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .controls-panel {
+    padding: 1rem;
   }
   
   .speed-control {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .speed-control label {
-    font-weight: 500;
-    margin-right: 0.5rem;
-    min-width: 110px;
+    flex-direction: column;
+    align-items: flex-start;
   }
   
   .speed-slider {
-    flex: 1;
-    min-width: 150px;
-    height: 8px;
-    -webkit-appearance: none;
-    appearance: none;
-    background: #ddd;
-    outline: none;
-    border-radius: 4px;
-  }
-  
-  .speed-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #4d94ff;
-    cursor: pointer;
-  }
-  
-  .speed-slider::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #4d94ff;
-    cursor: pointer;
-    border: none;
-  }
-  
-  .speed-label {
-    min-width: 70px;
-    text-align: center;
-    padding: 0.3rem 0.6rem;
-    background-color: #f0f0f0;
-    border-radius: 4px;
-    font-size: 0.9rem;
-  }
-  
-  /* Button variants */
-  .animation-toggle-button {
     width: 100%;
-    margin-top: 0.5rem;
   }
   
-  /* Responsive adjustments */
-  @media (max-width: 576px) {
-    .controls-panel {
-      padding: 1rem;
-    }
-    
-    .speed-control {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    
-    .speed-slider {
-      width: 100%;
-    }
-    
-    .speed-control label,
-    .speed-label {
-      margin-bottom: 0.5rem;
-    }
+  .speed-control label,
+  .speed-label {
+    margin-bottom: 0.5rem;
   }
+  
+  .speed-presets {
+    flex-direction: column;
+  }
+  
+  .step-navigation {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

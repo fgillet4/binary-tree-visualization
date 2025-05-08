@@ -5,315 +5,570 @@
 
 /* Base styles */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f8f9fa;
-  }
-  
-  h1, h2, h3 {
-    margin-bottom: 0.5rem;
-    color: #2c3e50;
-  }
-  
-  button {
-    cursor: pointer;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    background-color: #4d94ff;
-    color: white;
-    font-weight: 500;
-    transition: background-color 0.2s;
-  }
-  
-  button:hover {
-    background-color: #3a7bd5;
-  }
-  
-  button:disabled {
-    background-color: #b3cce6;
-    cursor: not-allowed;
-  }
-  
-  input, select {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-  }
-  
-  /* App container */
-  .app-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem;
-  }
-  
-  /* Header */
-  .app-header {
-    text-align: center;
-    padding: 1rem 0 2rem;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 2rem;
-  }
-  
-  .app-description {
-    color: #666;
-    font-size: 1.1rem;
-  }
-  
-  /* Main content layout */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+h1, h2, h3 {
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: #4d94ff;
+  color: white;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #3a7bd5;
+}
+
+button:disabled {
+  background-color: #b3cce6;
+  cursor: not-allowed;
+}
+
+input, select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* App container */
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Header */
+.app-header {
+  text-align: center;
+  padding: 1rem 0 2rem;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 2rem;
+}
+
+.app-description {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Tabs for visualization types */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.tab-button {
+  padding: 0.7rem 1.5rem;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-button:hover {
+  background-color: #e0e0e0;
+}
+
+.tab-button.active {
+  background-color: #4d94ff;
+  color: white;
+}
+
+/* Main content layout */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 992px) {
   .main-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    flex-direction: row;
   }
   
-  @media (min-width: 992px) {
-    .main-content {
-      flex-direction: row;
-    }
-    
-    .left-panel {
-      flex: 1;
-      max-width: 350px;
-    }
-    
-    .right-panel {
-      flex: 2;
-    }
-  }
-  
-  /* Tree controls panel */
-  .controls-panel {
-    background-color: white;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1.5rem;
-  }
-  
-  .operation-form, .batch-form {
-    margin-bottom: 1.5rem;
-  }
-  
-  .control-group {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .operation-select, .traversal-select {
+  .left-panel {
     flex: 1;
-    min-width: 120px;
+    max-width: 350px;
   }
   
-  .value-input, .batch-input {
+  .right-panel {
     flex: 2;
   }
-  
-  .operation-button, .batch-button {
-    white-space: nowrap;
+}
+
+/* Tree controls panel */
+.controls-panel {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.operation-form, .batch-form {
+  margin-bottom: 1.5rem;
+}
+
+.control-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.operation-select, .traversal-select, .heap-type-select {
+  flex: 1;
+  min-width: 120px;
+}
+
+.value-input, .batch-input {
+  flex: 2;
+}
+
+.operation-button, .batch-button {
+  white-space: nowrap;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Traversal controls */
+.traversal-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Animation controls */
+.animation-controls {
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.speed-slider {
+  flex: 1;
+}
+
+.animation-toggle-button {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Animation status indicator */
+.animation-status {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+}
+
+.animation-indicator {
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.animation-indicator.playing {
+  background-color: #4CAF50;
+}
+
+.animation-indicator.paused {
+  background-color: #FF9800;
+}
+
+/* Animation arrows */
+.animation-arrow {
+  transition: opacity 0.3s;
+}
+
+.animation-arrow path, 
+.animation-arrow polygon,
+.animation-arrow text {
+  transition: all 0.3s;
+}
+
+/* Info panel */
+.info-panel {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.step-counter {
+  background-color: #f0f0f0;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.operation-message {
+  background-color: #f8f9fa;
+  padding: 0.8rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #4d94ff;
+}
+
+.tree-stats, .heap-stats {
+  margin-bottom: 1.5rem;
+}
+
+.tree-stats ul, .heap-stats ul {
+  list-style: none;
+}
+
+.tree-stats li, .heap-stats li {
+  padding: 0.2rem 0;
+}
+
+.stat-note {
+  font-size: 0.9rem;
+  color: #dc3545;
+}
+
+.educational-content {
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+}
+
+.operation-description {
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+.complexity-info {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.complexity-info ul, .complexity-list {
+  list-style: none;
+  margin-bottom: 0.5rem;
+}
+
+.complexity-description {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.learning-tips, .heap-tips, .info-tips {
+  background-color: #e6f7ff;
+  padding: 1rem;
+  border-radius: 4px;
+  border-left: 4px solid #1aa3ff;
+  margin-bottom: 1rem;
+}
+
+.learning-tips h3, .heap-tips h3, .info-tips h3 {
+  color: #0066cc;
+  margin-bottom: 0.7rem;
+}
+
+.learning-tips ul, .heap-tips ul, .info-tips ul {
+  list-style: inside;
+  padding-left: 0.5rem;
+}
+
+.learning-tips li, .heap-tips li, .info-tips li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* Tree visualization */
+.tree-visualization-container {
+  width: 100%;
+  height: 600px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.tree-visualization {
+  width: 100%;
+  height: 100%;
+}
+
+.tree-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Tree node and edge animations */
+.tree-node {
+  transition: transform 0.3s;
+}
+
+.tree-node.highlight .node-circle {
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
+}
+
+.tree-node.searching .node-circle {
+  filter: drop-shadow(0 0 5px rgba(255, 153, 0, 0.7));
+}
+
+.tree-node.found .node-circle {
+  filter: drop-shadow(0 0 5px rgba(0, 204, 102, 0.7));
+}
+
+.tree-node.inserting .node-circle,
+.tree-node.deleting .node-circle {
+  animation: pulse 1.5s infinite;
+}
+
+.tree-edge {
+  transition: stroke 0.3s;
+}
+
+.tree-edge.highlight {
+  stroke-width: 3;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
   }
-  
-  .error-message {
-    color: #dc3545;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
   }
-  
-  /* Traversal controls */
-  .traversal-controls {
-    display: flex;
-    align-items: center;
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Footer */
+.app-footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding: 1rem 0;
+  border-top: 1px solid #eee;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Node details panel */
+.node-details-panel {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 300px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 1.2rem;
+  z-index: 5;
+  overflow-y: auto;
+  max-height: calc(100% - 2rem);
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+.node-details-panel.visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
+.node-details-panel h3 {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+  padding-right: 25px;
+}
+
+.close-button {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.close-button:hover {
+  color: #666;
+}
+
+.detail-section {
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.detail-section h4 {
+  margin-bottom: 0.7rem;
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.detail-item {
+  display: flex;
+  margin-bottom: 0.5rem;
+  align-items: baseline;
+}
+
+.detail-label {
+  min-width: 100px;
+  color: #6c757d;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.detail-value {
+  flex: 1;
+  color: #333;
+}
+
+.node-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.node-chip {
+  background-color: #f0f7ff;
+  border: 1px solid #d0e3ff;
+  color: #0066cc;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Heap visualization specific */
+.heap-visualization-app {
+  width: 100%;
+}
+
+.heap-type-selector {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.heap-type-selector label {
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.heap-controls .operation-button {
+  background-color: #4d94ff;
+}
+
+.heap-controls .operation-button:hover {
+  background-color: #3a7bd5;
+}
+
+/* Scrollbar styling */
+.node-details-panel::-webkit-scrollbar,
+.info-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.node-details-panel::-webkit-scrollbar-track,
+.info-panel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.node-details-panel::-webkit-scrollbar-thumb,
+.info-panel::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.node-details-panel::-webkit-scrollbar-thumb:hover,
+.info-panel::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tabs {
+    flex-direction: column;
     gap: 0.5rem;
-    margin-bottom: 1rem;
   }
   
-  /* Animation controls */
-  .animation-controls {
-    border-top: 1px solid #eee;
-    padding-top: 1rem;
-    margin-top: 1rem;
+  .node-details-panel {
+    width: calc(100% - 2rem);
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    max-height: 400px;
   }
-  
-  .speed-control {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .speed-slider {
-    flex: 1;
-  }
-  
-  .animation-toggle-button {
-    width: 100%;
-    margin-top: 0.5rem;
-  }
-  
-  /* Info panel */
-  .info-panel {
-    background-color: white;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .info-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  .step-counter {
-    background-color: #f0f0f0;
-    padding: 0.3rem 0.7rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-  }
-  
-  .operation-message {
-    background-color: #f8f9fa;
-    padding: 0.8rem;
-    border-radius: 4px;
-    margin-bottom: 1.5rem;
-    border-left: 4px solid #4d94ff;
-  }
-  
-  .tree-stats {
-    margin-bottom: 1.5rem;
-  }
-  
-  .tree-stats ul {
-    list-style: none;
-  }
-  
-  .tree-stats li {
-    padding: 0.2rem 0;
-  }
-  
-  .stat-note {
-    font-size: 0.9rem;
-    color: #dc3545;
-  }
-  
-  .educational-content {
-    border-top: 1px solid #eee;
-    padding-top: 1.5rem;
-  }
-  
-  .operation-description {
-    margin-bottom: 1.5rem;
-    line-height: 1.7;
-  }
-  
-  .complexity-info {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1.5rem;
-  }
-  
-  .complexity-info ul {
-    list-style: none;
-    margin-bottom: 0.5rem;
-  }
-  
-  .complexity-description {
-    font-size: 0.95rem;
-    color: #666;
-  }
-  
-  .learning-tips {
-    background-color: #e6f7ff;
-    padding: 1rem;
-    border-radius: 4px;
-    border-left: 4px solid #1aa3ff;
-  }
-  
-  /* Tree visualization */
-  .tree-visualization-container {
-    width: 100%;
-    height: 600px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-  }
-  
-  .tree-visualization {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .tree-empty {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  /* Tree node and edge animations */
-  .tree-node {
-    transition: transform 0.3s;
-  }
-  
-  .tree-node.highlight .node-circle {
-    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
-  }
-  
-  .tree-node.searching .node-circle {
-    filter: drop-shadow(0 0 5px rgba(255, 153, 0, 0.7));
-  }
-  
-  .tree-node.found .node-circle {
-    filter: drop-shadow(0 0 5px rgba(0, 204, 102, 0.7));
-  }
-  
-  .tree-node.inserting .node-circle,
-  .tree-node.deleting .node-circle {
-    animation: pulse 1.5s infinite;
-  }
-  
-  .tree-edge {
-    transition: stroke 0.3s;
-  }
-  
-  .tree-edge.highlight {
-    stroke-width: 3;
-  }
-  
-  /* Animations */
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.1);
-      opacity: 0.8;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-  
-  /* Footer */
-  .app-footer {
-    text-align: center;
-    margin-top: 3rem;
-    padding: 1rem 0;
-    border-top: 1px solid #eee;
-    color: #666;
-    font-size: 0.9rem;
-  }
+}

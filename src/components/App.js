@@ -1,203 +1,31 @@
 /**
- * App.js - Updated with node details panel and support for panning
+ * App.js - Binary tree visualization application with support for BST and Heap
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TreeVisualization from './TreeVisualization';
 import TreeControls from './TreeControls';
 import InfoPanel from './InfoPanel';
 import NodeDetailsPanel from './NodeDetailsPanel';
+import HeapVisualization from './HeapVisualization';
+import '../styles/App.css';
 
-// Tree Node Class
-class TreeNode {
-  constructor(value) {
-    this.value = value;
-    this.left = null;
-    this.right = null;
-    this.x = 0;
-    this.y = 0;
-    this.highlightState = 'normal';
-  }
-}
-
-// Simple Binary Search Tree Implementation
-class SimpleTree {
-  constructor() {
-    this.root = null;
-    this.nodeCount = 0;
-  }
-  
-  insert(value) {
-    const newNode = new TreeNode(value);
-    this.nodeCount++;
-    
-    if (!this.root) {
-      this.root = newNode;
-      return;
-    }
-    
-    const insertNode = (node, newNode) => {
-      if (newNode.value < node.value) {
-        if (node.left === null) {
-          node.left = newNode;
-        } else {
-          insertNode(node.left, newNode);
-        }
-      } else {
-        if (node.right === null) {
-          node.right = newNode;
-        } else {
-          insertNode(node.right, newNode);
-        }
-      }
-    };
-    
-    insertNode(this.root, newNode);
-  }
-  
-  search(value) {
-    if (!this.root) return { found: false };
-    
-    const searchNode = (node, value) => {
-      if (!node) return { found: false };
-      
-      if (node.value === value) {
-        return { found: true, node };
-      }
-      
-      if (value < node.value) {
-        return searchNode(node.left, value);
-      } else {
-        return searchNode(node.right, value);
-      }
-    };
-    
-    return searchNode(this.root, value);
-  }
-  
-  delete(value) {
-    if (!this.root) return;
-    
-    const findMin = (node) => {
-      let current = node;
-      while (current.left !== null) {
-        current = current.left;
-      }
-      return current.value;
-    };
-    
-    const removeNode = (node, value) => {
-      if (node === null) return null;
-      
-      if (value < node.value) {
-        node.left = removeNode(node.left, value);
-        return node;
-      } else if (value > node.value) {
-        node.right = removeNode(node.right, value);
-        return node;
-      } else {
-        // Node with no children
-        if (node.left === null && node.right === null) {
-          this.nodeCount--;
-          return null;
-        }
-        
-        // Node with one child
-        if (node.left === null) {
-          this.nodeCount--;
-          return node.right;
-        }
-        if (node.right === null) {
-          this.nodeCount--;
-          return node.left;
-        }
-        
-        // Node with two children
-        const minValue = findMin(node.right);
-        node.value = minValue;
-        node.right = removeNode(node.right, minValue);
-        return node;
-      }
-    };
-    
-    this.root = removeNode(this.root, value);
-  }
-  
-  // Calculate positions for visualization
-  calculatePositions(width = 800, height = 500) {
-    if (!this.root) return;
-    
-    const yOffset = 50;
-    const levelHeight = 80;
-    
-    const getTreeHeight = (node) => {
-      if (!node) return 0;
-      return 1 + Math.max(getTreeHeight(node.left), getTreeHeight(node.right));
-    };
-    
-    const treeHeight = getTreeHeight(this.root);
-    const totalWidth = width;
-    
-    const position = (node, level = 0, leftBound = 0, rightBound = totalWidth) => {
-      if (!node) return;
-      
-      const mid = (leftBound + rightBound) / 2;
-      node.x = mid;
-      node.y = level * levelHeight + yOffset;
-      
-      position(node.left, level + 1, leftBound, mid);
-      position(node.right, level + 1, mid, rightBound);
-    };
-    
-    position(this.root);
-  }
-  
-  // Get tree height (maximum depth)
-  getHeight() {
-    const calculateHeight = (node) => {
-      if (!node) return 0;
-      return 1 + Math.max(calculateHeight(node.left), calculateHeight(node.right));
-    };
-    
-    return calculateHeight(this.root) - 1; // Height is 0-based
-  }
-  
-  // Check if tree is balanced
-  isBalanced() {
-    const checkBalance = (node) => {
-      if (!node) return { balanced: true, height: 0 };
-      
-      const left = checkBalance(node.left);
-      const right = checkBalance(node.right);
-      
-      if (!left.balanced || !right.balanced) {
-        return { balanced: false, height: 0 };
-      }
-      
-      if (Math.abs(left.height - right.height) > 1) {
-        return { balanced: false, height: 0 };
-      }
-      
-      return { 
-        balanced: true, 
-        height: 1 + Math.max(left.height, right.height) 
-      };
-    };
-    
-    return checkBalance(this.root).balanced;
-  }
-}
+// Import Tree Classes
+import BinarySearchTree from '../models/BinarySearchTree';
+import TreeNode from '../models/TreeNode';
 
 // Main App Component
 const App = () => {
-  const [tree, setTree] = useState(new SimpleTree());
+  const [activeTab, setActiveTab] = useState('bst'); // 'bst' or 'heap'
+  const [tree, setTree] = useState(new BinarySearchTree());
   const [message, setMessage] = useState('Welcome! Add values to build a tree.');
   const [treeVersion, setTreeVersion] = useState(0);
   const [selectedNode, setSelectedNode] = useState(null);
   const [nodeRelationships, setNodeRelationships] = useState(null);
+  const [animationInProgress, setAnimationInProgress] = useState(false);
   
   // Calculate positions whenever the tree changes
-  useEffect(() => {
+  React.useEffect(() => {
     if (tree) {
       tree.calculatePositions();
     }
@@ -364,7 +192,7 @@ const App = () => {
   
   // Reset the tree
   const handleReset = () => {
-    setTree(new SimpleTree());
+    setTree(new BinarySearchTree());
     setMessage('Tree has been reset.');
     setSelectedNode(null);
     setNodeRelationships(null);
@@ -374,20 +202,7 @@ const App = () => {
   // Generate a random tree
   const handleRandomTree = () => {
     try {
-      const newTree = new SimpleTree();
-      const usedValues = new Set();
-      
-      // Generate 7 random unique values
-      for (let i = 0; i < 7; i++) {
-        let value;
-        do {
-          value = Math.floor(Math.random() * 100) + 1;
-        } while (usedValues.has(value));
-        
-        usedValues.add(value);
-        newTree.insert(value);
-      }
-      
+      const newTree = BinarySearchTree.createRandomTree(7, 1, 100);
       setTree(newTree);
       setMessage('Generated a random tree.');
       setSelectedNode(null);
@@ -399,10 +214,20 @@ const App = () => {
     }
   };
   
+  // Handle traversals
+  const handleTraversal = (traversalType) => {
+    setMessage(`Selected ${traversalType} traversal`);
+    // Implement traversal animation later
+  };
+  
   // Handle node click
-  const handleNodeClick = (node, relationships) => {
+  const handleNodeClick = (node) => {
     setSelectedNode(node);
+    
+    // Calculate relationships
+    const relationships = calculateNodeRelationships(tree, node);
     setNodeRelationships(relationships);
+    
     setMessage(`Selected node: ${node.value}`);
     
     // Highlight the selected node
@@ -516,86 +341,107 @@ const App = () => {
   const getTreeStats = () => {
     return {
       nodeCount: tree.nodeCount,
-      height: tree.getHeight(),
-      isBalanced: tree.isBalanced()
+      height: tree.getHeight ? tree.getHeight() : 0,
+      isBalanced: tree.isBalanced ? tree.isBalanced() : false
     };
   };
   
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Binary Search Tree Visualization</h1>
+        <h1>Binary Tree Data Structures Visualization</h1>
         <p className="app-description">
-          An educational tool to visualize binary search tree operations
+          An educational tool to visualize binary tree data structures
         </p>
+        
+        <div className="tabs">
+          <button 
+            className={`tab-button ${activeTab === 'bst' ? 'active' : ''}`}
+            onClick={() => setActiveTab('bst')}
+          >
+            Binary Search Tree
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'heap' ? 'active' : ''}`}
+            onClick={() => setActiveTab('heap')}
+          >
+            Binary Heap
+          </button>
+        </div>
       </header>
       
       <div className="main-content">
-        <div className="left-panel">
-          <div className="controls-panel">
-            <h2>Tree Operations</h2>
-            <TreeControls
-              onInsert={handleInsert}
-              onSearch={handleSearch}
-              onDelete={handleDelete}
-              onReset={handleReset}
-              onRandomTree={handleRandomTree}
-              onBatchInsert={handleBatchInsert}
-              onTraversal={() => {}}
-              animationInProgress={false}
-            />
-          </div>
-          
-          <div className="info-panel">
-            <div className="info-header">
-              <h2>Operation Result</h2>
-            </div>
-            <div className="operation-message">
-              {message}
-            </div>
-            <div className="tree-stats">
-              <h3>Tree Statistics</h3>
-              <ul>
-                <li><strong>Nodes:</strong> {tree.nodeCount}</li>
-                <li><strong>Height:</strong> {tree.getHeight()}</li>
-                <li><strong>Balanced:</strong> {tree.isBalanced() ? 'Yes' : 'No'}</li>
-              </ul>
+        {activeTab === 'bst' ? (
+          <>
+            <div className="left-panel">
+              <div className="controls-panel">
+                <h2>Tree Operations</h2>
+                <TreeControls
+                  onInsert={handleInsert}
+                  onSearch={handleSearch}
+                  onDelete={handleDelete}
+                  onReset={handleReset}
+                  onRandomTree={handleRandomTree}
+                  onBatchInsert={handleBatchInsert}
+                  onTraversal={handleTraversal}
+                  animationInProgress={animationInProgress}
+                />
+              </div>
+              
+              <div className="info-panel">
+                <div className="info-header">
+                  <h2>Operation Result</h2>
+                </div>
+                <div className="operation-message">
+                  {message}
+                </div>
+                <div className="tree-stats">
+                  <h3>Tree Statistics</h3>
+                  <ul>
+                    <li><strong>Nodes:</strong> {tree.nodeCount}</li>
+                    <li><strong>Height:</strong> {tree.getHeight ? tree.getHeight() : 0}</li>
+                    <li><strong>Balanced:</strong> {tree.isBalanced ? (tree.isBalanced() ? 'Yes' : 'No') : 'N/A'}</li>
+                  </ul>
+                </div>
+                
+                <div className="info-tips">
+                  <h3>Interaction Tips</h3>
+                  <ul>
+                    <li>Click on any node to view detailed information</li>
+                    <li>Hold and drag to pan the visualization</li>
+                    <li>Use Ctrl + mouse wheel to zoom in/out</li>
+                  </ul>
+                </div>
+              </div>
             </div>
             
-            <div className="info-tips">
-              <h3>Interaction Tips</h3>
-              <ul>
-                <li>Click on any node to view detailed information</li>
-                <li>Hold Ctrl and drag to pan the visualization</li>
-                <li>Use Ctrl + mouse wheel to zoom in/out</li>
-              </ul>
+            <div className="right-panel">
+              <div className="visualization-container">
+                <TreeVisualization
+                  tree={tree}
+                  animationInProgress={animationInProgress}
+                  onNodeClick={handleNodeClick}
+                  key={treeVersion}
+                />
+                
+                {selectedNode && nodeRelationships && (
+                  <NodeDetailsPanel
+                    node={selectedNode}
+                    relationships={nodeRelationships}
+                    onClose={handleCloseNodeDetails}
+                  />
+                )}
+              </div>
             </div>
-          </div>
-        </div>
-        
-        <div className="right-panel">
-          <div className="visualization-container">
-            <TreeVisualization
-              tree={tree}
-              animationInProgress={false}
-              onNodeClick={handleNodeClick}
-              key={treeVersion}
-            />
-            
-            {selectedNode && nodeRelationships && (
-              <NodeDetailsPanel
-                node={selectedNode}
-                relationships={nodeRelationships}
-                onClose={handleCloseNodeDetails}
-              />
-            )}
-          </div>
-        </div>
+          </>
+        ) : (
+          <HeapVisualization />
+        )}
       </div>
       
       <footer className="app-footer">
         <p>
-          Binary Search Tree Visualization - Educational Tool
+          Binary Tree Data Structures Visualization - Educational Tool
         </p>
       </footer>
     </div>
