@@ -13,6 +13,7 @@ const TreeVisualization = ({
   onNodeClick,
   width = 800,
   height = 500,
+  showBalanceFactors = false,
 }) => {
   const svgRef = useRef(null);
   const containerRef = useRef(null);
@@ -288,7 +289,7 @@ const TreeVisualization = ({
   };
   
   // Generate all nodes in the tree
-  const renderNodes = (node) => {
+  const renderNodes = (node, showBalanceFactors = false) => {
     if (!node) return [];
     
     let nodes = [
@@ -296,16 +297,17 @@ const TreeVisualization = ({
         key={`node-${node.value}-${node.x}-${node.y}`} 
         node={node} 
         animationInProgress={animationInProgress}
-        onClick={handleNodeClick} 
+        onClick={handleNodeClick}
+        showBalanceFactor={showBalanceFactors}
       />
     ];
     
     if (node.left) {
-      nodes = [...nodes, ...renderNodes(node.left)];
+      nodes = [...nodes, ...renderNodes(node.left, showBalanceFactors)];
     }
     
     if (node.right) {
-      nodes = [...nodes, ...renderNodes(node.right)];
+      nodes = [...nodes, ...renderNodes(node.right, showBalanceFactors)];
     }
     
     return nodes;
@@ -438,7 +440,7 @@ const TreeVisualization = ({
             {renderEdges(tree.root)}
           </g>
           <g className="nodes-container">
-            {renderNodes(tree.root)}
+            {renderNodes(tree.root, showBalanceFactors)}
           </g>
         </svg>
       </div>

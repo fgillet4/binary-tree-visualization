@@ -6,7 +6,7 @@
 import React from 'react';
 import { COLORS } from '../constants/colors';
 
-const TreeNode = ({ node, animationInProgress, onClick }) => {
+const TreeNode = ({ node, animationInProgress, onClick, showBalanceFactor = false }) => {
   if (!node) return null;
   
   // Determine node style based on highlight state
@@ -16,6 +16,14 @@ const TreeNode = ({ node, animationInProgress, onClick }) => {
   
   const getBorderColor = () => {
     return node.highlightState === 'normal' ? COLORS.BORDER_NORMAL : COLORS.BORDER_HIGHLIGHT;
+  };
+  
+  // Get color for balance factor
+  const getBalanceFactorColor = () => {
+    if (!node.balanceFactor) return '#555';
+    if (node.balanceFactor > 1 || node.balanceFactor < -1) return '#f44336'; // Red for imbalance
+    if (node.balanceFactor === 1 || node.balanceFactor === -1) return '#ff9800'; // Orange for borderline
+    return '#4CAF50'; // Green for perfect balance
   };
   
   // Handle node click
@@ -57,6 +65,32 @@ const TreeNode = ({ node, animationInProgress, onClick }) => {
       >
         {node.value}
       </text>
+      
+      {/* Balance factor indicator for AVL trees */}
+      {showBalanceFactor && node.balanceFactor !== undefined && (
+        <g className="balance-factor">
+          <circle
+            cx={node.x + 20}
+            cy={node.y - 20}
+            r={10}
+            fill="white"
+            stroke={getBalanceFactorColor()}
+            strokeWidth={1.5}
+          />
+          <text
+            x={node.x + 20}
+            y={node.y - 20}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize={9}
+            fontWeight="bold"
+            fill={getBalanceFactorColor()}
+            pointerEvents="none"
+          >
+            {node.balanceFactor || 0}
+          </text>
+        </g>
+      )}
     </g>
   );
 };

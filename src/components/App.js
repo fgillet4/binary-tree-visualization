@@ -1,5 +1,5 @@
 /**
- * App.js - Binary tree visualization application with support for BST and Heap
+ * App.js - Binary tree visualization application with support for BST, AVL, Heap, Collections, and Arrays
  */
 
 import React, { useState } from 'react';
@@ -8,7 +8,12 @@ import TreeControls from './TreeControls';
 import InfoPanel from './InfoPanel';
 import NodeDetailsPanel from './NodeDetailsPanel';
 import HeapVisualization from './HeapVisualization';
+import AVLVisualization from './AVLVisualization';
+import DataStructuresVisualization from './DataStructuresVisualization';
+import ArrayVisualization from './ArrayVisualization';
 import '../styles/App.css';
+import '../styles/DataStructures.css';
+import '../styles/ArrayVisualization.css';
 
 // Import Tree Classes
 import BinarySearchTree from '../models/BinarySearchTree';
@@ -16,7 +21,7 @@ import TreeNode from '../models/TreeNode';
 
 // Main App Component
 const App = () => {
-  const [activeTab, setActiveTab] = useState('bst'); // 'bst' or 'heap'
+  const [activeTab, setActiveTab] = useState('bst'); // 'bst', 'avl', 'heap', 'collections', or 'arrays'
   const [tree, setTree] = useState(new BinarySearchTree());
   const [message, setMessage] = useState('Welcome! Add values to build a tree.');
   const [treeVersion, setTreeVersion] = useState(0);
@@ -349,9 +354,9 @@ const App = () => {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Binary Tree Data Structures Visualization</h1>
+        <h1>Data Structures & Algorithms Visualization</h1>
         <p className="app-description">
-          An educational tool to visualize binary tree data structures
+          An educational tool to visualize data structures and algorithms
         </p>
         
         <div className="tabs">
@@ -362,10 +367,28 @@ const App = () => {
             Binary Search Tree
           </button>
           <button 
+            className={`tab-button ${activeTab === 'avl' ? 'active' : ''}`}
+            onClick={() => setActiveTab('avl')}
+          >
+            AVL Tree
+          </button>
+          <button 
             className={`tab-button ${activeTab === 'heap' ? 'active' : ''}`}
             onClick={() => setActiveTab('heap')}
           >
             Binary Heap
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'collections' ? 'active' : ''}`}
+            onClick={() => setActiveTab('collections')}
+          >
+            Sets & Maps
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'arrays' ? 'active' : ''}`}
+            onClick={() => setActiveTab('arrays')}
+          >
+            Arrays
           </button>
         </div>
       </header>
@@ -434,14 +457,20 @@ const App = () => {
               </div>
             </div>
           </>
-        ) : (
+        ) : activeTab === 'avl' ? (
+          <AVLVisualization />
+        ) : activeTab === 'heap' ? (
           <HeapVisualization />
+        ) : activeTab === 'collections' ? (
+          <DataStructuresVisualization />
+        ) : (
+          <ArrayVisualization />
         )}
       </div>
       
       <footer className="app-footer">
         <p>
-          Binary Tree Data Structures Visualization - Educational Tool
+          Data Structures & Algorithms Visualization - Educational Tool
         </p>
       </footer>
     </div>
